@@ -6,6 +6,7 @@
 
 from __future__ import print_function
 import rover, time
+import task1
 
 #======================================================================
 # Reading single character by forcing stdin to raw mode
@@ -38,54 +39,57 @@ def readkey(getchar_fn=None):
 
 # End of single character reading
 #======================================================================
+def userInputs():
+    speed = 60
 
-speed = 60
+    print ("Tests the motors by using the arrow keys to control")
+    print ("Use , or < to slow down")
+    print ("Use . or > to speed up")
+    print ("Speed changes take effect when the next arrow key is pressed")
+    print ("Press space bar to coast to stop")
+    print ("Press b to brake and stop quickly")
+    print ("Press Ctrl-C to end")
+    print
 
-print ("Tests the motors by using the arrow keys to control")
-print ("Use , or < to slow down")
-print ("Use . or > to speed up")
-print ("Speed changes take effect when the next arrow key is pressed")
-print ("Press space bar to coast to stop")
-print ("Press b to brake and stop quickly")
-print ("Press Ctrl-C to end")
-print
+    rover.init(0, PiBit=False)
 
-rover.init(0, PiBit=False)
+    # main loop
+    try:
+        while True:
+            keyp = readkey()
+            if keyp == 'w' or ord(keyp) == 16:
+                rover.forward(speed)
+                print ('Forward', speed)
+            elif keyp == 'z' or ord(keyp) == 17:
+                rover.reverse(speed)
+                print ('Reverse', speed)
+            elif keyp == 's' or ord(keyp) == 18:
+                rover.spinRight(speed)
+                print ('Spin Right', speed)
+            elif keyp == 'a' or ord(keyp) == 19:
+                rover.spinLeft(speed)
+                print ('Spin Left', speed)
+            elif keyp == '.' or keyp == '>':
+                speed = min(100, speed+10)
+                print ('Speed+', speed)
+            elif keyp == ',' or keyp == '<':
+                speed = max (0, speed-10)
+                print ('Speed-', speed)
+            elif keyp == ' ':
+                rover.stop()
+                print ('Stop')
+            elif keyp == 'b':
+                rover.brake()
+                print ('Brake')
+            elif keyp == 'p':
+                task1.run()
+            elif ord(keyp) == 3:
+                break
 
-# main loop
-try:
-    while True:
-        keyp = readkey()
-        if keyp == 'w' or ord(keyp) == 16:
-            rover.forward(speed)
-            print ('Forward', speed)
-        elif keyp == 'z' or ord(keyp) == 17:
-            rover.reverse(speed)
-            print ('Reverse', speed)
-        elif keyp == 's' or ord(keyp) == 18:
-            rover.spinRight(speed)
-            print ('Spin Right', speed)
-        elif keyp == 'a' or ord(keyp) == 19:
-            rover.spinLeft(speed)
-            print ('Spin Left', speed)
-        elif keyp == '.' or keyp == '>':
-            speed = min(100, speed+10)
-            print ('Speed+', speed)
-        elif keyp == ',' or keyp == '<':
-            speed = max (0, speed-10)
-            print ('Speed-', speed)
-        elif keyp == ' ':
-            rover.stop()
-            print ('Stop')
-        elif keyp == 'b':
-            rover.brake()
-            print ('Brake')
-        elif ord(keyp) == 3:
-            break
 
-except KeyboardInterrupt:
-    pass
+    except KeyboardInterrupt:
+        pass
 
-finally:
-    rover.cleanup()
-    
+    finally:
+        rover.cleanup()
+        
