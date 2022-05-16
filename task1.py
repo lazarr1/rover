@@ -7,7 +7,7 @@ import termios
 
 
 
-rover.init(1)
+rover.init(0)
 
 #left is index 1
 
